@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Navbar() {
   return (
-    <header className="bg-blue-600 text-white p-4 shadow-md">
+    <header className="bg-primary text-white p-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/">
           <div className="text-2xl font-bold">SM</div>
