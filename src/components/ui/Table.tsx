@@ -64,7 +64,7 @@ export default function Table<T>({
                 <th
                   key={column?.key}
                   className={clsx(
-                    "border-b-2 border-gray-200 bg-blue-600 text-white font-semibold p-3",
+                    "border-b-2 border-gray-200 bg-primary text-white font-semibold p-3",
                     "text-start",
                     "first:rounded-tl-lg last:rounded-tr-lg"
                   )}

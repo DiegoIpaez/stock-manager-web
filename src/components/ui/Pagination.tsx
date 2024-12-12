@@ -32,7 +32,7 @@ export default function Pagination({
           "px-3 py-1 rounded-md text-white",
           currentPage === 1
             ? "bg-gray-400 cursor-not-allowed"
-            : "bg-blue-600 hover:bg-gray-600"
+            : "bg-primary hover:bg-gray-600"
         )}
       >
         Anterior
@@ -48,7 +48,7 @@ export default function Pagination({
               "px-3 py-1 rounded-md text-white",
               currentPage === number
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-gray-600"
+                : "bg-primary hover:bg-gray-600"
             )}
           >
             {number}
@@ -64,7 +64,7 @@ export default function Pagination({
           "px-3 py-1 rounded-md text-white",
           currentPage === totalPages
             ? "bg-gray-400 cursor-not-allowed"
-            : "bg-blue-600 hover:bg-gray-600"
+            : "bg-primary hover:bg-gray-600"
         )}
       >
         Siguiente
