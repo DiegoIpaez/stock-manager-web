@@ -1,17 +1,17 @@
 import clsx from "clsx";
 
 export default function Subtitle({
-  text,
+  children,
   className,
 }: {
-  text: string;
+  children: React.ReactNode;
   className?: string;
 }) {
   return (
     <h1
       className={clsx("text-2xl font-bold", { [className ?? ""]: className })}
     >
-      {text}
+      {children}
     </h1>
   );
 }
