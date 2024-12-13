@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logout from "./Logout";
 
 export default function Navbar() {
   return (
@@ -7,13 +8,14 @@ export default function Navbar() {
         <Link href="/">
           <div className="text-2xl font-bold">SM</div>
         </Link>
-        <nav className="space-x-4">
+        <nav className="space-x-4 flex items-center">
           <Link href="/" className="hover:underline p-1">
-            Inicio
+            Home
           </Link>
           <Link href="/admin" className="hover:underline p-1">
             Admin
           </Link>
+          <Logout />
         </nav>
       </div>
     </header>
