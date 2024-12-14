@@ -47,7 +47,7 @@ export default function Table<T>({
 }: TableProps<T>) {
   return (
     <Fragment>
-      {title && <Subtitle text={title} className="my-4 text-lg" />}
+      {title && <Subtitle className="my-4 text-lg">{title}</Subtitle>}
       <div className="overflow-x-auto rounded-xl">
         <table
           className={clsx(

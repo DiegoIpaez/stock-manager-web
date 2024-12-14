@@ -1,3 +1,4 @@
+import httpStatus from "http-status";
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 import { CONFIG } from "./constants";
@@ -23,7 +24,14 @@ export async function middleware(req: NextRequest) {
 
   const path = req?.nextUrl?.pathname;
   if (path && path.startsWith("/api/")) {
-    return NextResponse.json({ message: "No autorizado" }, { status: 401 });
+    const unauthorizedError = {
+      message: "No autorizado",
+      statusCode: httpStatus.UNAUTHORIZED,
+    };
+    return NextResponse.json(
+      { error: unauthorizedError },
+      { status: unauthorizedError.statusCode }
+    );
   }
 
   return NextResponse.redirect(new URL("/login", req.url));
