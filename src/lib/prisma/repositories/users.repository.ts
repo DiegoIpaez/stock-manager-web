@@ -33,3 +33,7 @@ export async function getPaginatedUsers({
 
   return paginationResponse;
 }
+
+export async function getUserByFilter(filter: Prisma.UserWhereUniqueInput) {
+  return await prisma.user.findUnique({ where: filter });
+}
