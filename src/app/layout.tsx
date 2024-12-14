@@ -3,7 +3,10 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SM",
+  title: {
+    default: "SM",
+    template: "SM - %s",
+  },
   description: "Stock Manager",
 };
 
