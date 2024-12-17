@@ -14,15 +14,16 @@ datasource db {
 }
 
 model User {
-  id         Int        @id @default(autoincrement())
-  email      String     @unique @db.VarChar(255)
-  password   String     @db.VarChar(70)
-  first_name String     @db.VarChar(255)
-  last_name  String     @db.VarChar(255)
-  disabled   Boolean    @default(false)
-  deleted    Boolean    @default(false)
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
+  id         Int       @id @default(autoincrement())
+  email      String    @unique @db.VarChar(255)
+  password   String    @db.VarChar(70)
+  first_name String    @db.VarChar(255)
+  last_name  String    @db.VarChar(255)
+  disabled   Boolean   @default(false)
+  deleted    Boolean   @default(false)
+  last_login DateTime?
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
 
   @@index([email])
   @@map(name: "users")

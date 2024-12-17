@@ -69,6 +69,8 @@ export default function UsersTable() {
           {
             key: "disabled",
             title: "Habilitado",
+            className: "text-center",
+            rowClassName: "flex justify-center",
             render: (row) => <DisabledRow disabled={row?.disabled} />,
           },
           {
@@ -78,6 +80,14 @@ export default function UsersTable() {
               formatDateToDDMMYYYY(
                 row?.created_at ? new Date(row.created_at).toISOString() : ""
               ),
+          },
+          {
+            key: "last_login",
+            title: "Fecha de último ingreso",
+            render: (row) =>
+              row?.last_login
+                ? formatDateToDDMMYYYY(new Date(row.last_login).toISOString())
+                : "",
           },
           {
             key: "actions",

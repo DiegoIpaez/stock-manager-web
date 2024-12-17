@@ -1,7 +1,10 @@
-import bcrypt from 'bcryptjs'
+import bcrypt from "bcryptjs";
 import NextAuth, { AuthOptions, DefaultUser } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getUserByFilter } from "@/lib/prisma/repositories/users.repository";
+import {
+  getUserByFilter,
+  updateUserById,
+} from "@/lib/prisma/repositories/users.repository";
 import { CONFIG } from "@/constants";
 
 declare module "next-auth" {
@@ -37,12 +40,14 @@ const authOptions: AuthOptions = {
 
         if (!userFound) throw new Error("Credenciales invalidas");
 
+        await updateUserById(userFound?.id, { last_login: new Date() });
+
         const matchPassword = await bcrypt.compare(
           credentials.password,
           userFound.password
         );
 
-        if (!matchPassword) throw new Error('Credenciales invalidas');
+        if (!matchPassword) throw new Error("Credenciales invalidas");
 
         return {
           id: userFound.id.toString(),

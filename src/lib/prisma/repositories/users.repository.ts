@@ -26,7 +26,10 @@ export async function getPaginatedUsers({
     take: limit,
     where: whereClause,
     orderBy: {
-      updated_at: "desc",
+      last_login: {
+        sort: Prisma.SortOrder.desc,
+        nulls: Prisma.NullsOrder.last,
+      },
     },
   });
 

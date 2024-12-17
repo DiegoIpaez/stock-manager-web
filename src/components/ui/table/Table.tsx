@@ -5,13 +5,17 @@ import { Fragment } from "react";
 import { Inbox, Loader } from "lucide-react";
 import Subtitle from "../typography/Subtitle";
 
+type ColumnProps<T> = {
+  key: string;
+  title: string;
+  className?: string;
+  rowClassName?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  render?: (row: T) => React.ReactNode | any;
+};
+
 type TableProps<T> = {
-  columns?: {
-    key: string;
-    title: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    render?: (row: T) => React.ReactNode | any;
-  }[];
+  columns?: ColumnProps<T>[];
   data?: T[];
   title?: string;
   selectedRow?: T | null;
@@ -19,12 +23,6 @@ type TableProps<T> = {
   handleRowClick?: (row: T) => void;
   loading?: boolean;
   className?: string;
-  pagination?: {
-    currentPage?: number | null;
-    totalPages?: number | null;
-    totalRecords?: number | null;
-    onPageChange?: (page: number) => void;
-  };
 };
 
 export default function Table<T>({
@@ -42,13 +40,10 @@ export default function Table<T>({
       {title && <Subtitle className="my-4 text-lg">{title}</Subtitle>}
       <div className="overflow-x-auto rounded-xl shadow">
         <table
-          className={clsx(
-            "min-w-full text-sm text-left bg-white",
-            {
-              "min-h-[256px]": data?.length === 0 || loading,
-              [className]: className,
-            }
-          )}
+          className={clsx("min-w-full text-sm text-left bg-white", {
+            "min-h-[256px]": data?.length === 0 || loading,
+            [className]: className,
+          })}
         >
           <thead>
             <tr>
@@ -56,9 +51,9 @@ export default function Table<T>({
                 <th
                   key={column?.key}
                   className={clsx(
-                    "border-b-2 border-gray-200 bg-primary text-white font-semibold p-3",
-                    "text-start",
-                    "first:rounded-tl-lg last:rounded-tr-lg"
+                    "border-b-2 border-gray-200 bg-primary text-white font-semibold p-3 ",
+                    "first:rounded-tl-lg last:rounded-tr-lg",
+                    column?.className && column?.className
                   )}
                 >
                   {column?.title}
@@ -97,7 +92,8 @@ export default function Table<T>({
                       key={column.key}
                       className={clsx(
                         "border-b border-gray-200 p-3",
-                        "first:rounded-bl-lg last:rounded-br-lg text-black"
+                        "first:rounded-bl-lg last:rounded-br-lg text-black",
+                        column?.rowClassName && column?.rowClassName
                       )}
                     >
                       {column?.render
