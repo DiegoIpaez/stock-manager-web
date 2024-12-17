@@ -9,9 +9,15 @@ export async function getPaginatedUsers({
   page = PAGE,
   limit = PAGE_SIZE,
   deleted = false,
+  id,
+}: {
+  page: number;
+  limit: number;
+  deleted: boolean;
+  id?: number;
 }) {
-  const whereClause: Prisma.UserWhereInput = {};
-  if (deleted) whereClause.deleted = deleted;
+  const whereClause: Prisma.UserWhereInput = { deleted };
+  if (id) whereClause.id = { not: id };
 
   const totalRecords = await prisma.user.count({ where: whereClause });
 
@@ -36,4 +42,9 @@ export async function getPaginatedUsers({
 
 export async function getUserByFilter(filter: Prisma.UserWhereUniqueInput) {
   return await prisma.user.findUnique({ where: filter });
+}
+
+export async function updateUserById(id: number, data: Prisma.UserUpdateInput) {
+  const updatedUser = await prisma.user.update({ where: { id }, data });
+  return updatedUser;
 }
