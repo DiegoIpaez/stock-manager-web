@@ -1,15 +1,20 @@
 "use client";
 import clsx from "clsx";
+import { DEFAULT_PAGINATION } from "@/constants";
+
+type PaginationProps = {
+  currentPage: number | null;
+  totalPages: number | null;
+  totalRecords: number | null;
+  onPageChange: (page: number) => void;
+};
 
 export default function Pagination({
   currentPage,
   totalPages,
+  totalRecords,
   onPageChange = () => {},
-}: {
-  currentPage?: number | null;
-  totalPages?: number | null;
-  onPageChange?: (page: number) => void;
-}) {
+}: Partial<PaginationProps>) {
   const handlePrevious = () => {
     if (currentPage && currentPage > 1) {
       onPageChange(currentPage - 1);
@@ -21,6 +26,10 @@ export default function Pagination({
       onPageChange(currentPage + 1);
     }
   };
+
+  if (!totalRecords || totalRecords <= DEFAULT_PAGINATION.PAGE_SIZE) {
+    return;
+  }
 
   return (
     <div className="flex justify-center items-center space-x-2 mt-4">
