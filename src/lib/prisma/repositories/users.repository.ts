@@ -44,7 +44,10 @@ export async function getPaginatedUsers({
 }
 
 export async function getUserByFilter(filter: Prisma.UserWhereUniqueInput) {
-  return await prisma.user.findUnique({ where: filter });
+  return await prisma.user.findUnique({
+    where: filter,
+    include: { role: true },
+  });
 }
 
 export async function updateUserById(id: number, data: Prisma.UserUpdateInput) {

@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import { Role } from "@prisma/client";
 import NextAuth, { AuthOptions, DefaultUser } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import {
@@ -9,13 +10,14 @@ import { CONFIG } from "@/constants";
 
 declare module "next-auth" {
   interface User extends DefaultUser {
-    role?: string;
+    role?: Role | null;
   }
 
   interface JWT {
     id: string;
     name: string;
     email: string;
+    role?: Role | null;
   }
 }
 
@@ -44,15 +46,16 @@ const authOptions: AuthOptions = {
 
         const matchPassword = await bcrypt.compare(
           credentials.password,
-          userFound.password
+          userFound?.password
         );
 
         if (!matchPassword) throw new Error("Credenciales invalidas");
 
         return {
-          id: userFound.id.toString(),
-          name: userFound.first_name + " " + userFound.last_name,
-          email: userFound.email,
+          id: userFound?.id?.toString(),
+          name: userFound?.first_name + " " + userFound?.last_name,
+          email: userFound?.email,
+          role: userFound?.role,
         };
       },
     }),
@@ -63,11 +66,12 @@ const authOptions: AuthOptions = {
         token.id = user?.id;
         token.name = user?.name;
         token.email = user?.email;
+        token.role = user?.role;
       }
       return token;
     },
     async session({ session, token }) {
-      const user = { ...session?.user, ...token };
+      const user = { ...session?.user, role: token?.role };
       return { ...session, user };
     },
   },
