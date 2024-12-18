@@ -13,6 +13,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Role {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique @db.VarChar(255)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  User User[]
+
+  @@index([name])
+  @@map(name: "roles")
+}
+
 model User {
   id         Int       @id @default(autoincrement())
   email      String    @unique @db.VarChar(255)
@@ -22,8 +34,11 @@ model User {
   disabled   Boolean   @default(false)
   deleted    Boolean   @default(false)
   last_login DateTime?
+  role_id    Int?
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
+
+  role Role? @relation(fields: [role_id], references: [id])
 
   @@index([email])
   @@map(name: "users")
