@@ -19,10 +19,41 @@ model Role {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  User User[]
+  users             User[]
+  roles_permissions RolePermission[]
 
   @@index([name])
   @@map(name: "roles")
+}
+
+enum PermissionMethod {
+  GET
+  POST
+  PUT
+  DELETE
+}
+
+model Permission {
+  id             Int              @id @default(autoincrement())
+  path           String           @db.VarChar(255)
+  method         PermissionMethod
+  description    String?          @db.VarChar(255)
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @updatedAt
+  RolePermission RolePermission[]
+
+  @@map(name: "permissions")
+}
+
+model RolePermission {
+  role_id       Int
+  permission_id Int
+
+  role       Role       @relation(fields: [role_id], references: [id])
+  permission Permission @relation(fields: [permission_id], references: [id])
+
+  @@id([role_id, permission_id])
+  @@map("roles_permissions")
 }
 
 model User {

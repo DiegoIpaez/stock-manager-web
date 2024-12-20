@@ -46,7 +46,17 @@ export async function getPaginatedUsers({
 export async function getUserByFilter(filter: Prisma.UserWhereUniqueInput) {
   return await prisma.user.findUnique({
     where: filter,
-    include: { role: true },
+    include: {
+      role: {
+        include: {
+          roles_permissions: {
+            include: {
+              permission: true,
+            }
+          },
+        },
+      },
+    },
   });
 }
 

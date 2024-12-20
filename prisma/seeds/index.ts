@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { PrismaClient, Role } = require("@prisma/client");
+const { PrismaClient, Role, Permission, PermissionMethod } = require("@prisma/client");
 const bcrypt = require("bcryptjs");
 const prisma = new PrismaClient();
 
@@ -25,6 +25,36 @@ async function seedRoles() {
   return await prisma.role.createMany({ data, skipDuplicates: true });
 }
 
+async function seedPermissions() {
+  const data = [
+    { path: "/", method: PermissionMethod.GET },
+    { path: "/admin", method: PermissionMethod.GET },
+    { path: "/api/users", method: PermissionMethod.GET },
+    { path: "/api/users", method: PermissionMethod.POST },
+    { path: "/api/users/:id", method: PermissionMethod.GET },
+    { path: "/api/users/:id", method: PermissionMethod.PUT },
+    { path: "/api/users/:id", method: PermissionMethod.DELETE },
+  ];
+  return await prisma.permission.createMany({ data, skipDuplicates: true });
+}
+
+async function seedRolesPermissions() {
+  const permissions = await prisma.permission.findMany();
+  const data = permissions?.map((permission: typeof Permission) => {
+    return {
+      role_id: 1,
+      permission_id: permission?.id,
+    };
+  });
+
+  data.push({
+    role_id: 2,
+    permission_id: 1,
+  });
+
+  return await prisma.rolePermission.createMany({ data, skipDuplicates: true });
+}
+
 async function seedUsers() {
   const roles = await prisma.role.findMany();
   const data = roles?.map((role: typeof Role) => {
@@ -46,6 +76,8 @@ async function seedUsers() {
 const SEED_LIST_COMMAND = "list";
 const SEED_COMMANDS: Record<string, () => Promise<void>> = {
   roles: seedRoles,
+  permission: seedPermissions,
+  ["roles_permissions"]: seedRolesPermissions,
   users: seedUsers,
 };
 
@@ -72,8 +104,8 @@ async function main() {
     if (seedCommand) return await executeSeedCommand(seedCommand);
 
     log.success("Seeding started...");
-    for (const [name, fn ] of Object.entries(SEED_COMMANDS)) {
-      await seedData(name, fn)
+    for (const [name, fn] of Object.entries(SEED_COMMANDS)) {
+      await seedData(name, fn);
     }
     log.success("Seeding completed successfully!");
   } catch (error) {

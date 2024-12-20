@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { Role } from "@prisma/client";
+import { Permission, Role, RolePermission } from "@prisma/client";
 import NextAuth, { AuthOptions, DefaultUser } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import {
@@ -9,15 +9,21 @@ import {
 import { CONFIG } from "@/constants";
 
 declare module "next-auth" {
+  interface RoleWithPermission extends RolePermission {
+    permission?: Permission;
+  }
+  interface RoleUser extends Role {
+    roles_permissions?: RoleWithPermission[];
+  }
   interface User extends DefaultUser {
-    role?: Role | null;
+    role?: RoleUser | null;
   }
 
   interface JWT {
     id: string;
     name: string;
     email: string;
-    role?: Role | null;
+    role?: RoleUser | null;
   }
 }
 
