@@ -6,7 +6,7 @@ export default function Logout() {
   return (
     <button
       onClick={() => signOut({ callbackUrl: "/login" })}
-      className="flex items-center justify-center bg-danger rounded-full p-2"
+      className="flex items-center justify-center bg-danger hover:bg-danger-light rounded-full p-2"
     >
       <LogOut size={20} />
     </button>

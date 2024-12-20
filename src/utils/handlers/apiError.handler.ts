@@ -2,11 +2,11 @@ import httpStatus from "http-status";
 import { NextResponse } from "next/server";
 import { CONFIG } from "@/constants";
 
-interface ResponseError {
+type ResponseError = {
   message: string;
   statusCode: number;
   stack?: string;
-}
+};
 
 const statusMessages: Record<number, string> = httpStatus;
 

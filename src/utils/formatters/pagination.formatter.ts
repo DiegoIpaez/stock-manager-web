@@ -1,18 +1,18 @@
-export interface PaginationResponse<T> {
+export type PaginationResponse<T> = {
   data: T[];
   currentPage: number;
   recordsPerPage: number;
   totalRecords: number;
   totalPages: number;
   hasNextPage: boolean;
-}
+};
 
-interface PaginationParams<T> {
+type PaginationParams<T> = {
   data: T[];
   page: number;
   limit: number;
   totalRecords: number;
-}
+};
 
 export function paginationFormatter<T>({
   data,

@@ -1,18 +1,29 @@
-import bcrypt from 'bcryptjs'
+import bcrypt from "bcryptjs";
+import { Permission, Role, RolePermission } from "@prisma/client";
 import NextAuth, { AuthOptions, DefaultUser } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getUserByFilter } from "@/lib/prisma/repositories/users.repository";
+import {
+  getUserByFilter,
+  updateUserById,
+} from "@/lib/prisma/repositories/users.repository";
 import { CONFIG } from "@/constants";
 
 declare module "next-auth" {
+  interface RoleWithPermission extends RolePermission {
+    permission?: Permission;
+  }
+  interface RoleUser extends Role {
+    roles_permissions?: RoleWithPermission[];
+  }
   interface User extends DefaultUser {
-    role?: string;
+    role?: RoleUser | null;
   }
 
   interface JWT {
     id: string;
     name: string;
     email: string;
+    role?: RoleUser | null;
   }
 }
 
@@ -37,17 +48,20 @@ const authOptions: AuthOptions = {
 
         if (!userFound) throw new Error("Credenciales invalidas");
 
+        await updateUserById(userFound?.id, { last_login: new Date() });
+
         const matchPassword = await bcrypt.compare(
           credentials.password,
-          userFound.password
+          userFound?.password
         );
 
-        if (!matchPassword) throw new Error('Credenciales invalidas');
+        if (!matchPassword) throw new Error("Credenciales invalidas");
 
         return {
-          id: userFound.id.toString(),
-          name: userFound.first_name + " " + userFound.last_name,
-          email: userFound.email,
+          id: userFound?.id?.toString(),
+          name: userFound?.first_name + " " + userFound?.last_name,
+          email: userFound?.email,
+          role: userFound?.role,
         };
       },
     }),
@@ -58,11 +72,12 @@ const authOptions: AuthOptions = {
         token.id = user?.id;
         token.name = user?.name;
         token.email = user?.email;
+        token.role = user?.role;
       }
       return token;
     },
     async session({ session, token }) {
-      const user = { ...session?.user, ...token };
+      const user = { ...session?.user, role: token?.role };
       return { ...session, user };
     },
   },

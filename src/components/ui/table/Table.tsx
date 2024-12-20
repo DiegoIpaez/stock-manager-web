@@ -3,17 +3,19 @@
 import clsx from "clsx";
 import { Fragment } from "react";
 import { Inbox, Loader } from "lucide-react";
-import Pagination from "./Pagination";
-import { DEFAULT_PAGINATION } from "@/constants";
-import Subtitle from "./typography/Subtitle";
+import Subtitle from "../typography/Subtitle";
 
-interface TableProps<T> {
-  columns?: {
-    key: string;
-    title: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    render?: (row: T) => React.ReactNode | any;
-  }[];
+type ColumnProps<T> = {
+  key: string;
+  title: string;
+  className?: string;
+  rowClassName?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  render?: (row: T) => React.ReactNode | any;
+};
+
+type TableProps<T> = {
+  columns?: ColumnProps<T>[];
   data?: T[];
   title?: string;
   selectedRow?: T | null;
@@ -21,13 +23,7 @@ interface TableProps<T> {
   handleRowClick?: (row: T) => void;
   loading?: boolean;
   className?: string;
-  pagination?: {
-    currentPage?: number | null;
-    totalPages?: number | null;
-    totalRecords?: number | null;
-    onPageChange?: (page: number) => void;
-  };
-}
+};
 
 export default function Table<T>({
   columns = [],
@@ -37,26 +33,17 @@ export default function Table<T>({
   selectedRow = null,
   noDataMessage = "No hay datos para mostrar",
   className = "",
-  pagination = {
-    currentPage: null,
-    totalPages: null,
-    totalRecords: null,
-    onPageChange: () => {},
-  },
   loading = false,
 }: TableProps<T>) {
   return (
     <Fragment>
       {title && <Subtitle className="my-4 text-lg">{title}</Subtitle>}
-      <div className="overflow-x-auto rounded-xl">
+      <div className="overflow-x-auto rounded-xl shadow">
         <table
-          className={clsx(
-            "min-w-full text-sm text-left table-auto border-separate border-spacing-0.5 bg-transparent bg-white",
-            {
-              "min-h-[256px]": data?.length === 0 || loading,
-              [className]: className,
-            }
-          )}
+          className={clsx("min-w-full text-sm text-left bg-white", {
+            "min-h-[256px]": data?.length === 0 || loading,
+            [className]: className,
+          })}
         >
           <thead>
             <tr>
@@ -64,9 +51,9 @@ export default function Table<T>({
                 <th
                   key={column?.key}
                   className={clsx(
-                    "border-b-2 border-gray-200 bg-primary text-white font-semibold p-3",
-                    "text-start",
-                    "first:rounded-tl-lg last:rounded-tr-lg"
+                    "border-b-2 border-gray-200 bg-primary text-white font-semibold p-3 ",
+                    "first:rounded-tl-lg last:rounded-tr-lg",
+                    column?.className && column?.className
                   )}
                 >
                   {column?.title}
@@ -93,7 +80,7 @@ export default function Table<T>({
                   key={rowIndex}
                   onClick={() => handleRowClick(row)}
                   className={clsx(
-                    "hover:bg-blue-200 transition-colors cursor-pointer",
+                    "hover:bg-primary-light transition-colors cursor-pointer",
                     rowIndex % 2 === 0 ? "bg-gray-200" : "bg-gray-100",
                     selectedRow === row
                       ? "bg-blue-50 border-l-4 border-blue-400"
@@ -105,7 +92,8 @@ export default function Table<T>({
                       key={column.key}
                       className={clsx(
                         "border-b border-gray-200 p-3",
-                        "first:rounded-bl-lg last:rounded-br-lg text-black"
+                        "first:rounded-bl-lg last:rounded-br-lg text-black",
+                        column?.rowClassName && column?.rowClassName
                       )}
                     >
                       {column?.render
@@ -121,8 +109,8 @@ export default function Table<T>({
               <tr>
                 <td colSpan={columns.length} className="text-center p-[5rem]">
                   <div className="flex flex-col justify-center items-center">
-                    <Inbox size={40} />
-                    <span className="mt-2 text-[13px]">
+                    <Inbox size={40} className="text-primary" />
+                    <span className="mt-2 text-[13px] text-primary">
                       {noDataMessage && noDataMessage}
                     </span>
                   </div>
@@ -132,14 +120,6 @@ export default function Table<T>({
           </tbody>
         </table>
       </div>
-      {pagination?.totalRecords &&
-        pagination?.totalRecords > DEFAULT_PAGINATION.PAGE_SIZE && (
-          <Pagination
-            currentPage={pagination?.currentPage}
-            totalPages={pagination?.totalPages}
-            onPageChange={pagination?.onPageChange}
-          />
-        )}
     </Fragment>
   );
 }
