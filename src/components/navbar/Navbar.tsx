@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Logout from "./Logout";
+import AdminLink from "./AdminLink";
 
 export default function Navbar() {
   return (
@@ -12,9 +13,10 @@ export default function Navbar() {
           <Link href="/" className="hover:underline p-1">
             Home
           </Link>
-          <Link href="/admin" className="hover:underline p-1">
-            Admin
+          <Link href="/profile" className="hover:underline p-1">
+            Profile
           </Link>
+          <AdminLink />
           <Logout />
         </nav>
       </div>
