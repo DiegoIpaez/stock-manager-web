@@ -73,12 +73,107 @@ async function seedUsers() {
   return await prisma.user.createMany({ data, skipDuplicates: true });
 }
 
+async function seedProducts() {
+  const data = [
+    {
+      name: "Wireless Headphones",
+      description: "High-quality wireless headphones with noise cancellation.",
+      price: 120.999,
+      stock: 50,
+      disabled: false,
+      deleted: false,
+    },
+    {
+      name: "Smartphone Pro",
+      description:
+        "Latest generation smartphone with advanced camera features.",
+      price: 899.999,
+      stock: 100,
+      disabled: false,
+      deleted: false,
+    },
+    {
+      name: "Laptop 14-inch",
+      description:
+        "Lightweight and powerful laptop with 8GB RAM and 256GB SSD.",
+      price: 699.999,
+      stock: 30,
+      disabled: false,
+      deleted: false,
+    },
+    {
+      name: "Gaming Keyboard",
+      description:
+        "Mechanical keyboard with RGB backlighting and programmable keys.",
+      price: 59.999,
+      stock: 75,
+      disabled: false,
+      deleted: false,
+    },
+    {
+      name: "4K Monitor",
+      description: "27-inch 4K monitor with HDR support and ultra-thin bezels.",
+      price: 249.999,
+      stock: 20,
+      disabled: false,
+      deleted: false,
+    },
+    {
+      name: "Portable Speaker",
+      description:
+        "Bluetooth speaker with powerful sound and long battery life.",
+      price: 45.5,
+      stock: 150,
+      disabled: false,
+      deleted: false,
+    },
+    {
+      name: "Smartwatch",
+      description:
+        "Stylish smartwatch with fitness tracking and notifications.",
+      price: 149.99,
+      stock: 60,
+      disabled: false,
+      deleted: false,
+    },
+    {
+      name: "Tablet 10-inch",
+      description: "Affordable 10-inch tablet with high-resolution display.",
+      price: 299.999,
+      stock: 40,
+      disabled: false,
+      deleted: false,
+    },
+    {
+      name: "Wireless Charger",
+      description:
+        "Fast wireless charger compatible with all Qi-enabled devices.",
+      price: 25.75,
+      stock: 200,
+      disabled: false,
+      deleted: false,
+    },
+    {
+      name: "Noise-Cancelling Earbuds",
+      description:
+        "Compact earbuds with noise-cancelling technology and long battery life.",
+      price: 79.99,
+      stock: 90,
+      disabled: false,
+      deleted: false,
+    },
+  ];
+
+  return await prisma.product.createMany({ data, skipDuplicates: true });
+}
+
 const SEED_LIST_COMMAND = "list";
 const SEED_COMMANDS: Record<string, () => Promise<void>> = {
   roles: seedRoles,
   permission: seedPermissions,
   ["roles_permissions"]: seedRolesPermissions,
   users: seedUsers,
+  products: seedProducts,
 };
 
 async function executeSeedCommand(command: string) {
