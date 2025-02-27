@@ -74,3 +74,46 @@ model User {
   @@index([email])
   @@map(name: "users")
 }
+
+model Image {
+  id          Int      @id @default(autoincrement())
+  path        String   @unique @db.VarChar(255)
+  title       String?  @db.VarChar(150)
+  description String?  @db.VarChar(150)
+  disabled    Boolean  @default(false)
+  deleted     Boolean  @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  products_images ProductImage[]
+
+  @@map(name: "images")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique @db.VarChar(150)
+  description String   @db.Text()
+  price       Decimal  @db.Decimal(10, 3)
+  stock       Int      @default(0)
+  disabled    Boolean  @default(false)
+  deleted     Boolean  @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  products_images ProductImage[]
+
+  @@index([name])
+  @@map(name: "products")
+}
+
+model ProductImage {
+  product_id Int
+  image_id   Int
+
+  product Product @relation(fields: [product_id], references: [id])
+  image   Image   @relation(fields: [image_id], references: [id])
+
+  @@id([product_id, image_id])
+  @@map("product_images")
+}
