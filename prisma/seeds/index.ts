@@ -28,12 +28,14 @@ async function seedRoles() {
 async function seedPermissions() {
   const data = [
     { path: "/", method: PermissionMethod.GET },
+    { path: "/profile", method: PermissionMethod.GET },
     { path: "/admin", method: PermissionMethod.GET },
     { path: "/api/users", method: PermissionMethod.GET },
     { path: "/api/users", method: PermissionMethod.POST },
     { path: "/api/users/:id", method: PermissionMethod.GET },
     { path: "/api/users/:id", method: PermissionMethod.PUT },
     { path: "/api/users/:id", method: PermissionMethod.DELETE },
+    { path: "/api/products", method: PermissionMethod.GET },
   ];
   return await prisma.permission.createMany({ data, skipDuplicates: true });
 }
@@ -47,10 +49,20 @@ async function seedRolesPermissions() {
     };
   });
 
-  data.push({
-    role_id: 2,
-    permission_id: 1,
-  });
+  data.push(...[
+    {
+      role_id: 2,
+      permission_id: 1,
+    },
+    {
+      role_id: 2,
+      permission_id: 2,
+    },
+    {
+      role_id: 2,
+      permission_id: 9,
+    },
+  ]);
 
   return await prisma.rolePermission.createMany({ data, skipDuplicates: true });
 }
