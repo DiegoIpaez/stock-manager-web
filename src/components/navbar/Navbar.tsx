@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Logout from "./Logout";
 import AdminLink from "./AdminLink";
+import ModeToggle from "./ModeToogle";
 
 export default function Navbar() {
   return (
@@ -17,6 +18,7 @@ export default function Navbar() {
             Profile
           </Link>
           <AdminLink />
+          <ModeToggle />
           <Logout />
         </nav>
       </div>
