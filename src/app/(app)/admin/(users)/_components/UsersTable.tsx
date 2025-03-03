@@ -105,7 +105,6 @@ export default function UsersTable() {
           },
         ]}
         data={data?.data}
-        title="Usuarios"
         loading={isLoading}
       />
       <Pagination {...data} onPageChange={(value) => setPage(value)} />

@@ -36,6 +36,7 @@ async function seedPermissions() {
     { path: "/api/users/:id", method: PermissionMethod.PUT },
     { path: "/api/users/:id", method: PermissionMethod.DELETE },
     { path: "/api/products", method: PermissionMethod.GET },
+    { path: "/admin/products", method: PermissionMethod.GET },
   ];
   return await prisma.permission.createMany({ data, skipDuplicates: true });
 }
