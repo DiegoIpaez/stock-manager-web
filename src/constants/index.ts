@@ -10,3 +10,7 @@ export const ROLES = {
   ADMIN: "ADMIN",
   USER: "USER",
 };
+
+export const UPLOAD_DIRECTORIES = {
+  PRODUCTS: "products",
+};

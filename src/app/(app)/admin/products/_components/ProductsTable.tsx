@@ -67,7 +67,6 @@ export default function ProductsTable() {
           },
         ]}
         data={data?.data}
-        title="Productos"
         loading={isLoading}
       />
       <Pagination {...data} onPageChange={(value) => setPage(value)} />
