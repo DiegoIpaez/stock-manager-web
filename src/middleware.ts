@@ -60,10 +60,15 @@ export async function middleware(req: NextRequest) {
     );
   }
 
-  const requestHeaders = new Headers({
-    ...req.headers,
-    ...corsOptions,
-  });
+  const contentType = req.headers.get("content-type");
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("uid", session?.id);
+
+  if (!contentType?.includes("multipart/form-data")) {
+    Object.entries(corsOptions).forEach(([key, value]) => {
+      requestHeaders.set(key, value);
+    });
+  }
 
   requestHeaders.set("uid", session?.id?.toString() ?? "");
   return NextResponse.next({ request: { headers: requestHeaders } });
