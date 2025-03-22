@@ -1,14 +1,20 @@
 "use client";
 import { Product } from "@prisma/client";
+import { Pen, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
-import { PaginationResponse } from "@/utils/formatters/pagination.formatter";
 import { formatDateToDDMMYYYY } from "@/utils/formatters/date.formatter";
+import { currencyFormatter } from "@/utils/formatters/currency.formmater";
+import { showToastSuccess } from "@/utils/showToast.util";
+import { PaginationResponse } from "@/utils/formatters/pagination.formatter";
 import Table from "@/components/ui/table/Table";
 import Pagination from "@/components/ui/Pagination";
 import DisabledRow from "@/components/ui/table/rows/DisabledRow";
-import { getAllProductsByParams } from "@/services/products.service";
-import { currencyFormatter } from "@/utils/formatters/currency.formmater";
+import {
+  getAllProductsByParams,
+  removeProductById,
+} from "@/services/products.service";
+import clientErrorHandler from "@/utils/handlers/clientError.handler";
 
 export default function ProductsTable() {
   const router = useRouter();
@@ -23,7 +29,7 @@ export default function ProductsTable() {
       setData(data);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      alert("Hubo un error al cargar los datos");
+      clientErrorHandler(error);
     } finally {
       setIsLoading(false);
     }
@@ -39,31 +45,59 @@ export default function ProductsTable() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, router]);
 
+  async function handleRemoveProductById(id: unknown) {
+    try {
+      await removeProductById(id ?? "");
+      showToastSuccess("Product deleted successfully!");
+      await fetchProducts();
+    } catch (error: Error | unknown) {
+      clientErrorHandler(error);
+    }
+  }
+
   return (
     <Fragment>
       <Table
         columns={[
-          { key: "name", title: "Nombre" },
+          { key: "name", title: "Product name" },
           {
             key: "price",
-            title: "Precio",
+            title: "Price",
             render: (row) => `$${currencyFormatter(Number(row?.price ?? 0))}`,
           },
           { key: "stock", title: "Stock" },
           {
             key: "disabled",
-            title: "Activo",
+            title: "Active",
             className: "text-center",
             rowClassName: "flex justify-center",
             render: (row) => <DisabledRow disabled={row?.disabled} />,
           },
           {
             key: "created_at",
-            title: "Fecha de creación",
+            title: "Created at",
             render: (row) =>
               formatDateToDDMMYYYY(
                 row?.created_at ? new Date(row.created_at).toISOString() : ""
               ),
+          },
+          {
+            key: "actions",
+            title: "Actions",
+            render: (row) => (
+              <div className="flex gap-1">
+                <button className="bg-warning rounded-full p-[0.3rem]">
+                  <Pen size={20} />
+                </button>
+                <button className="bg-danger hover:bg-danger-dark rounded-full p-[0.3rem]">
+                  <Trash
+                    size={20}
+                    color="white"
+                    onClick={() => handleRemoveProductById(row?.id ?? 0)}
+                  />
+                </button>
+              </div>
+            ),
           },
         ]}
         data={data?.data}
