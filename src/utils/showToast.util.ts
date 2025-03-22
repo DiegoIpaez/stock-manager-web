@@ -25,14 +25,22 @@ const showToast = (
   });
 };
 
-export const showToastError = (message = "Ocurrió un error", options = {}) =>
-  showToast("error", message, options);
+export const showToastError = (
+  message = "Ocurrió un error",
+  options: Partial<ExternalToast> = {}
+) => showToast("error", message, options);
 
-export const showToastSuccess = (message = "Operación exitosa", options = {}) =>
-  showToast("success", message, options);
+export const showToastSuccess = (
+  message = "Operación exitosa",
+  options: Partial<ExternalToast> = {}
+) => showToast("success", message, options);
 
-export const showToastWarning = (message = "Advertencia", options = {}) =>
-  showToast("warning", message, options);
+export const showToastWarning = (
+  message = "Advertencia",
+  options: Partial<ExternalToast> = {}
+) => showToast("warning", message, options);
 
-export const showToastInfo = (message = "Información", options = {}) =>
-  showToast("info", message, options);
+export const showToastInfo = (
+  message = "Información",
+  options: Partial<ExternalToast> = {}
+) => showToast("info", message, options);
