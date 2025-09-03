@@ -1,6 +1,6 @@
 "use client";
 import { Product } from "@prisma/client";
-import { Pen, Trash } from "lucide-react";
+import { Pen, Plus, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import { formatDateToDDMMYYYY } from "@/utils/formatters/date.formatter";
@@ -15,6 +15,50 @@ import {
   removeProductById,
 } from "@/services/products.service";
 import clientErrorHandler from "@/utils/handlers/clientError.handler";
+import Popconfirm from "@/components/ui/Popconfirm";
+import CreateProductModal from "./modals/CreateProductModal";
+import { Button } from "@/components/ui/shadcn/button";
+
+function ActionColumn({
+  row,
+  onRefresh,
+}: {
+  row: Product;
+  onRefresh: () => Promise<void>;
+}) {
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
+
+  async function handleRemoveProductById(id: unknown) {
+    try {
+      setIsSubmitLoading(true);
+      await removeProductById(id ?? "");
+      showToastSuccess("Product deleted successfully!");
+      await onRefresh();
+    } catch (error: Error | unknown) {
+      clientErrorHandler(error);
+    } finally {
+      setIsSubmitLoading(false);
+    }
+  }
+
+  return (
+    <div className="flex gap-1">
+      <button className="bg-warning rounded-full p-[0.3rem] d-none">
+        <Pen size={20} />
+      </button>
+      <Popconfirm
+        trigger={
+          <button className="bg-danger hover:bg-danger-dark rounded-full p-[0.3rem]">
+            <Trash size={20} color="white" />
+          </button>
+        }
+        content={<p>Are you sure you want to delete this product?</p>}
+        onOk={() => handleRemoveProductById(row?.id ?? 0)}
+        loading={isSubmitLoading}
+      />
+    </div>
+  );
+}
 
 export default function ProductsTable() {
   const router = useRouter();
@@ -45,18 +89,18 @@ export default function ProductsTable() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, router]);
 
-  async function handleRemoveProductById(id: unknown) {
-    try {
-      await removeProductById(id ?? "");
-      showToastSuccess("Product deleted successfully!");
-      await fetchProducts();
-    } catch (error: Error | unknown) {
-      clientErrorHandler(error);
-    }
-  }
-
   return (
     <Fragment>
+      <div className="flex flex-1 justify-end">
+        <CreateProductModal onRefresh={fetchProducts}>
+          <Button
+            variant="outline"
+            className="mb-2 bg-success hover:bg-success hover:opacity-90"
+          >
+            Create New Product <Plus />
+          </Button>
+        </CreateProductModal>
+      </div>
       <Table
         columns={[
           { key: "name", title: "Product name" },
@@ -85,18 +129,7 @@ export default function ProductsTable() {
             key: "actions",
             title: "Actions",
             render: (row) => (
-              <div className="flex gap-1">
-                <button className="bg-warning rounded-full p-[0.3rem]">
-                  <Pen size={20} />
-                </button>
-                <button className="bg-danger hover:bg-danger-dark rounded-full p-[0.3rem]">
-                  <Trash
-                    size={20}
-                    color="white"
-                    onClick={() => handleRemoveProductById(row?.id ?? 0)}
-                  />
-                </button>
-              </div>
+              <ActionColumn row={row} onRefresh={fetchProducts} />
             ),
           },
         ]}
