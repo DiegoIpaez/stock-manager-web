@@ -26,7 +26,7 @@ export default function ActionRow({
       {children && children}
       {allowEdit && (
         <button
-          className="bg-warning rounded-full p-[0.3rem]"
+          className="bg-yellow-400 rounded-full p-[0.3rem]"
           onClick={handleOnEdit}
         >
           <Pen size={20} />
@@ -46,7 +46,7 @@ export default function ActionRow({
       )}
       {allowDeleted && (
         <button
-          className="bg-danger hover:bg-danger-dark rounded-full p-[0.3rem]"
+          className="bg-red-500 hover:bg-red-500-dark rounded-full p-[0.3rem]"
           onClick={handleOnDelete}
         >
           <Trash size={20} color="white" />

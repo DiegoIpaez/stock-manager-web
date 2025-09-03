@@ -5,7 +5,7 @@ import ModeToggle from "./ModeToogle";
 
 export default function Navbar() {
   return (
-    <header className="bg-primary text-white p-4 shadow-md">
+    <header className="bg-background text-foreground p-4 border-b shadow-sm">
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/">
           <div className="text-2xl font-bold">SM</div>

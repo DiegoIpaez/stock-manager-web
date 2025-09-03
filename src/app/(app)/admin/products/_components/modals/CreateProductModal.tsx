@@ -181,7 +181,7 @@ export default function CreateProductModal({
                 <Button
                   disabled={isSubmit}
                   type="submit"
-                  className="bg-success hover:bg-success hover:opacity-90"
+                  className="bg-green-500 hover:bg-green-500 hover:opacity-90"
                 >
                   {isSubmit && <Loader2 className="mr-2 animate-spin" />}
                   Submit

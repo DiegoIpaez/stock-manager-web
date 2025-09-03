@@ -34,7 +34,7 @@ export default function Popconfirm({
             Yes
           </Button>
           <Button
-            className="bg-danger hover:bg-danger-dark"
+            className="bg-red-500 hover:bg-red-500-dark"
             onClick={() => handleOnCancel()}
           >
             No

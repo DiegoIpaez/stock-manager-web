@@ -43,12 +43,12 @@ function ActionColumn({
 
   return (
     <div className="flex gap-1">
-      <button className="bg-warning rounded-full p-[0.3rem] d-none">
+      <button className="bg-yellow-400 rounded-full p-[0.3rem] d-none">
         <Pen size={20} />
       </button>
       <Popconfirm
         trigger={
-          <button className="bg-danger hover:bg-danger-dark rounded-full p-[0.3rem]">
+          <button className="bg-red-500 hover:bg-red-500-dark rounded-full p-[0.3rem]">
             <Trash size={20} color="white" />
           </button>
         }
@@ -95,7 +95,7 @@ export default function ProductsTable() {
         <CreateProductModal onRefresh={fetchProducts}>
           <Button
             variant="outline"
-            className="mb-2 bg-success hover:bg-success hover:opacity-90"
+            className="mb-2 bg-green-500 hover:bg-green-500 hover:opacity-90"
           >
             Create New Product <Plus />
           </Button>
