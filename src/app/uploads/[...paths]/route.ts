@@ -17,7 +17,9 @@ export async function GET(
     const bytes = await readFile(filePath);
     const mimeType = mime.lookup(filePath) || "application/octet-stream";
 
-    return new Response(bytes, {
+    const arrayBuffer = Uint8Array.from(bytes).buffer;
+
+    return new Response(arrayBuffer, {
       headers: {
         "Content-Type": mimeType,
       },
