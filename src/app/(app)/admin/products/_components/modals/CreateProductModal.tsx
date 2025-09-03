@@ -1,5 +1,5 @@
 "use client";
-import { z } from "zod";
+import { z as zod } from "zod";
 import { useState } from "react";
 import { File, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -23,33 +23,34 @@ import {
   FormMessage,
 } from "@/components/ui/shadcn/form";
 import { createProduct } from "@/services/products.service";
-import { useRouter } from "next/navigation";
 import clientErrorHandler from "@/utils/handlers/clientError.handler";
 import { showToastSuccess } from "@/utils/showToast.util";
 
-const formSchema = z.object({
-  name: z.string().min(2, {
+const formSchema = zod.object({
+  name: zod.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  description: z.string(),
-  price: z.coerce.number().min(0, {
+  description: zod.string(),
+  price: zod.coerce.number().min(0, {
     message: "Price must be at least 1.",
   }),
-  stock: z.coerce.number().min(0, {
+  stock: zod.coerce.number().min(0, {
     message: "Stock must be at least 0.",
   }),
-  disabled: z.boolean(),
-  images: z.any(),
+  disabled: zod.boolean(),
+  images: zod.any(),
 });
 
 export default function CreateProductModal({
   children,
+  onRefresh = async () => {},
 }: {
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) {
-  const router = useRouter();
   const [isSubmit, setIsSubmit] = useState(false);
-  const form = useForm<z.infer<typeof formSchema>>({
+  const [open, setOpen] = useState(false);
+  const form = useForm<zod.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -60,12 +61,14 @@ export default function CreateProductModal({
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: zod.infer<typeof formSchema>) {
     setIsSubmit(true);
     try {
       await createProduct(values);
       showToastSuccess("Product created successfully!");
-      router.refresh();
+      setOpen(false);
+      form.reset();
+      await onRefresh();
     } catch (error) {
       clientErrorHandler(error);
     } finally {
@@ -74,7 +77,7 @@ export default function CreateProductModal({
   }
 
   return (
-    <Dialog modal>
+    <Dialog modal open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
