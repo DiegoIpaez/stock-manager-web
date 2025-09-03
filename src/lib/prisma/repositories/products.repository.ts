@@ -21,6 +21,14 @@ export async function getPaginatedProducts({
     skip: (page - 1) * limit,
     take: limit,
     where: whereClause,
+    include: {
+      products_images: {
+        include: {
+          image: true,
+        },
+      },
+    },
+    orderBy: { created_at: "desc" },
   });
 
   const paginationResponse = paginationFormatter<Product>({

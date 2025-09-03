@@ -1,5 +1,8 @@
+import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { DEFAULT_PAGINATION } from "@/constants";
+import prisma from "@/lib/prisma/client";
+import { DEFAULT_PAGINATION, UPLOAD_DIRECTORIES } from "@/constants";
+import { uploadFile } from "@/utils/uploadFile.util";
 import apiErrorHandler, { ApiError } from "@/utils/handlers/apiError.handler";
 import { getPaginatedProducts } from "@/lib/prisma/repositories/products.repository";
 
@@ -20,6 +23,66 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.json(paginationResponse, { status: 200 });
+  } catch (error) {
+    return apiErrorHandler(error as ApiError);
+  }
+}
+export async function POST(req: NextRequest) {
+  try {
+    const formData = await req.formData();
+
+    const name = formData.get("name") as string;
+    const description = formData.get("description") as string;
+    const price = formData.get("price") && Number(formData.get("price"));
+    const stock = formData.get("stock") && Number(formData.get("stock"));
+    const images = formData.getAll("images") as File[] | null;
+
+    if (!name || !description || !price || !stock) {
+      throw new ApiError(400, "Missing required fields");
+    }
+    const createQuery: Prisma.ProductCreateArgs = {
+      data: {
+        name,
+        description,
+        price,
+        stock,
+      },
+      include: {
+        products_images: {
+          include: {
+            image: true,
+          },
+        },
+      },
+    };
+
+    if (images) {
+      const productPaths = [];
+      for (const image of images) {
+        const path = await uploadFile(image, UPLOAD_DIRECTORIES.PRODUCTS);
+        productPaths.push(path);
+      }
+
+      await prisma.image.createMany({
+        data: productPaths.map((path) => ({
+          path,
+        })),
+        skipDuplicates: true,
+      });
+
+      const imageRecords = await prisma.image.findMany({
+        where: { path: { in: productPaths } },
+        select: { id: true },
+      });
+      const imageIds = imageRecords.map((image) => ({ image_id: image?.id }));
+
+      createQuery.data.products_images = {
+        createMany: { data: imageIds },
+      };
+    }
+
+    const newProduct = await prisma.product.create(createQuery);
+    return NextResponse.json(newProduct, { status: 201 });
   } catch (error) {
     return apiErrorHandler(error as ApiError);
   }
