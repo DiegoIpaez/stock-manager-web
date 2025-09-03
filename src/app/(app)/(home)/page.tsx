@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <div className="flex flex-col mt-10">
-      <Title className="text-center">Stock Manager</Title>
+    <div className="flex flex-col px-10">
+      <Title>Stock Manager</Title>
       <CardList />
     </div>
   );
