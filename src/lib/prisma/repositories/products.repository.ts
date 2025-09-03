@@ -28,6 +28,7 @@ export async function getPaginatedProducts({
         },
       },
     },
+    orderBy: { created_at: "desc" },
   });
 
   const paginationResponse = paginationFormatter<Product>({
