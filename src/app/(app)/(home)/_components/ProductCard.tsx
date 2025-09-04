@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { Product, ProductImage } from "@prisma/client";
 import { currencyFormatter } from "@/utils/formatters/currency.formmater";
 import {
   Card,
@@ -12,15 +13,10 @@ import {
 import { Badge } from "@/components/ui/shadcn/badge";
 import { Button } from "@/components/ui/shadcn/button";
 import ProductDefaultImage from "../../../../../public/static/images/default-product.png";
-import { Product, ProductImage, Image as ImageModel } from "@prisma/client";
 
-interface ProductImagesProps extends ProductImage {
-  image: ImageModel;
-}
-
-interface ProductCardProps extends Product {
-  products_images: ProductImagesProps[];
-}
+type ProductCardProps = Product & {
+  products_images: ProductImage[];
+};
 
 export default function ProductCard({
   deleted,
@@ -32,8 +28,8 @@ export default function ProductCard({
   products_images,
 }: Partial<ProductCardProps>) {
   const imageSrc =
-    name && products_images?.[0]?.image?.path
-      ? products_images[0].image.path
+    name && products_images?.[0]?.path
+      ? products_images?.[0]?.path
       : ProductDefaultImage;
 
   return (
