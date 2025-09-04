@@ -6,11 +6,12 @@ import { NextRequest } from "next/server";
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { paths: string[] } }
+  { params }: { params: Promise<{ paths: string[] }> }
 ) {
   try {
+    const paramsResolved = await params;
     const rootDir = path.resolve(process.cwd(), "public/uploads");
-    const filePath = path.join(rootDir, ...params.paths);
+    const filePath = path.join(rootDir, ...paramsResolved.paths);
 
     if (!fs.existsSync(filePath)) throw new Error("File not found");
 
