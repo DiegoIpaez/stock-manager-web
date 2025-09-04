@@ -22,11 +22,7 @@ export async function getPaginatedProducts({
     take: limit,
     where: whereClause,
     include: {
-      products_images: {
-        include: {
-          image: true,
-        },
-      },
+      products_images: true,
     },
     orderBy: { created_at: "desc" },
   });

@@ -51,11 +51,7 @@ export async function POST(req: NextRequest) {
         stock,
       },
       include: {
-        products_images: {
-          include: {
-            image: true,
-          },
-        },
+        products_images: true,
       },
     };
 
@@ -65,22 +61,9 @@ export async function POST(req: NextRequest) {
         const path = await uploadFile(image, UPLOAD_DIRECTORIES.PRODUCTS);
         productPaths.push(path);
       }
-
-      await prisma.image.createMany({
-        data: productPaths.map((path) => ({
-          path,
-        })),
-        skipDuplicates: true,
-      });
-
-      const imageRecords = await prisma.image.findMany({
-        where: { path: { in: productPaths } },
-        select: { id: true },
-      });
-      const imageIds = imageRecords.map((image) => ({ image_id: image?.id }));
-
+      const productsImages = productPaths.map((path) => ({ path }));
       createQuery.data.products_images = {
-        createMany: { data: imageIds },
+        createMany: { data: productsImages },
       };
     }
 
