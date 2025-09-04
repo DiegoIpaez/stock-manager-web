@@ -1,5 +1,5 @@
-import { CONFIG } from '@/constants';
 import axios from 'axios';
+import { CONFIG } from '@/constants';
 
 const defaultOptions = {
   baseURL: CONFIG.BASE_URL + '/api',

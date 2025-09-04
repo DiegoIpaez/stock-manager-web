@@ -1,4 +1,4 @@
-import clientAxios from "@/utils/clientAxios.util";
+import clientAxios from "@/lib/axios";
 
 export async function getAllUsersByParams(params: unknown) {
   const { data } = await clientAxios.get("users", { params });

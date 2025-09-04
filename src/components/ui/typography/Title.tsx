@@ -9,7 +9,9 @@ export default function Title({
 }) {
   return (
     <h1
-      className={clsx("text-4xl font-bold", { [className ?? ""]: className })}
+      className={clsx("text-4xl font-bold py-5", {
+        [className ?? ""]: className,
+      })}
     >
       {children}
     </h1>

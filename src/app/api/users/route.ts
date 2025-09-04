@@ -23,7 +23,10 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(paginationResponse, { status: 200 });
   } catch (error) {
-    return apiErrorHandler(error as ApiError);
+    return apiErrorHandler({
+      error: error as ApiError,
+      request: req,
+    });
   }
 }
 
@@ -43,6 +46,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(paginationResponse, { status: 200 });
   } catch (error) {
-    return apiErrorHandler(error as ApiError);
+    return apiErrorHandler({
+      error: error as ApiError,
+      request: req,
+    });
   }
 }

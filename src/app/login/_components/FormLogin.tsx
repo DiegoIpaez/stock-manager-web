@@ -46,7 +46,7 @@ export default function FormLogin({ error }: { error?: string }) {
         />
       </div>
       {error && (
-        <p className="bg-danger text-xs rounded p-3 cursor-not-allowed">
+        <p className="bg-red-500 text-xs rounded p-3 cursor-not-allowed">
           {error}
         </p>
       )}

@@ -31,15 +31,23 @@ const formSchema = zod.object({
     message: "Name must be at least 2 characters.",
   }),
   description: zod.string(),
-  price: zod.coerce.number().min(0, {
-    message: "Price must be at least 1.",
-  }),
-  stock: zod.coerce.number().min(0, {
-    message: "Stock must be at least 0.",
-  }),
+  price: zod
+    .string()
+    .min(1, "Requerido")
+    .refine((val) => !isNaN(Number(val)), {
+      message: "Debe ser un número válido",
+    }),
+  stock: zod
+    .string()
+    .min(1, "Requerido")
+    .refine((val) => !isNaN(Number(val)), {
+      message: "Debe ser un número válido",
+    }),
   disabled: zod.boolean(),
   images: zod.any(),
 });
+
+type FormData = zod.infer<typeof formSchema>;
 
 export default function CreateProductModal({
   children,
@@ -50,21 +58,23 @@ export default function CreateProductModal({
 }) {
   const [isSubmit, setIsSubmit] = useState(false);
   const [open, setOpen] = useState(false);
-  const form = useForm<zod.infer<typeof formSchema>>({
+
+  const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       description: "",
-      price: 0,
-      stock: 0,
+      price: "0",
+      stock: "0",
       disabled: false,
     },
   });
 
-  async function onSubmit(values: zod.infer<typeof formSchema>) {
+  async function onSubmit(values: FormData) {
     setIsSubmit(true);
     try {
-      await createProduct(values);
+      const processedValues = formSchema.parse(values);
+      await createProduct(processedValues);
       showToastSuccess("Product created successfully!");
       setOpen(false);
       form.reset();
@@ -181,7 +191,7 @@ export default function CreateProductModal({
                 <Button
                   disabled={isSubmit}
                   type="submit"
-                  className="bg-success hover:bg-success hover:opacity-90"
+                  className="bg-green-500 hover:bg-green-500 hover:opacity-90"
                 >
                   {isSubmit && <Loader2 className="mr-2 animate-spin" />}
                   Submit

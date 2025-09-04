@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/shadcn/card";
 import { Badge } from "@/components/ui/shadcn/badge";
 import { Button } from "@/components/ui/shadcn/button";
-import ProductDefaultImage from "../../../../public/static/images/default-product.png";
+import ProductDefaultImage from "../../../../../public/static/images/default-product.png";
 import { Product, ProductImage, Image as ImageModel } from "@prisma/client";
 
 interface ProductImagesProps extends ProductImage {
@@ -31,6 +31,11 @@ export default function ProductCard({
   stock,
   products_images,
 }: Partial<ProductCardProps>) {
+  const imageSrc =
+    name && products_images?.[0]?.image?.path
+      ? products_images[0].image.path
+      : ProductDefaultImage;
+
   return (
     <Card className="w-full max-w-sm overflow-hidden">
       <CardHeader>
@@ -48,23 +53,14 @@ export default function ProductCard({
       <CardContent>
         <div className="space-y-2">
           <div className="flex justify-center p-2">
-            {name && products_images?.[0]?.image?.path ? (
+            <div className="relative w-40 h-40 sm:w-44 sm:h-44 md:w-48 md:h-48 rounded-md overflow-hidden">
               <Image
-                src={products_images?.[0]?.image?.path}
-                alt={name}
-                height={270}
-                width={270}
-                className="rounded-md"
+                src={imageSrc}
+                alt={name || "imagen por defecto"}
+                fill
+                className="object-cover"
               />
-            ) : (
-              <Image
-                src={ProductDefaultImage}
-                alt="imagen por defecto"
-                height={270}
-                width={270}
-                className="rounded-md"
-              />
-            )}
+            </div>
           </div>
           {price && (
             <div className="text-2xl font-bold">

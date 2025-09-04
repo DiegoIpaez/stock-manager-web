@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(paginationResponse, { status: 200 });
   } catch (error) {
-    return apiErrorHandler(error as ApiError);
+    return apiErrorHandler({ error: error as ApiError, request: req });
   }
 }
 export async function POST(req: NextRequest) {
@@ -38,7 +38,10 @@ export async function POST(req: NextRequest) {
     const images = formData.getAll("images") as File[] | null;
 
     if (!name || !description || !price || !stock) {
-      throw new ApiError(400, "Missing required fields");
+      throw new ApiError({
+        status: 400,
+        message: "Missing required fields",
+      });
     }
     const createQuery: Prisma.ProductCreateArgs = {
       data: {
@@ -84,6 +87,6 @@ export async function POST(req: NextRequest) {
     const newProduct = await prisma.product.create(createQuery);
     return NextResponse.json(newProduct, { status: 201 });
   } catch (error) {
-    return apiErrorHandler(error as ApiError);
+    return apiErrorHandler({ error: error as ApiError, request: req });
   }
 }

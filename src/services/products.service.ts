@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
-import clientAxios from "@/utils/clientAxios.util";
+import clientAxios from "@/lib/axios";
 import { CONFIG } from "@/constants";
 
 export async function createProduct(payloadRaw: any) {

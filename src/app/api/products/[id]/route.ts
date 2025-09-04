@@ -1,14 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
+import type { NextParams } from "@/types";
 import apiErrorHandler, { ApiError } from "@/utils/handlers/apiError.handler";
 import { updateProductById } from "@/lib/prisma/repositories/products.repository";
 
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, { params }: NextParams) {
   try {
-    const id = params.id;
-    if (!id) throw new ApiError(400, "product_id is required");
+    const { id } = await params;
+    if (!id) {
+      throw new ApiError({
+        status: 400,
+        message: "product_id is required",
+      });
+    }
 
     const deletedProduct = await updateProductById(Number(id), {
       deleted: true,
@@ -16,6 +19,6 @@ export async function DELETE(
 
     return NextResponse.json(deletedProduct, { status: 200 });
   } catch (error) {
-    return apiErrorHandler(error as ApiError);
+    return apiErrorHandler({ error: error as ApiError, request });
   }
 }
