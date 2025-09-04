@@ -169,6 +169,7 @@ export default function CreateProductModal({
                         />
                         {value && (
                           <div className="mt-2 flex flex-wrap gap-2">
+                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                             {Array.from(value).map((file: any) => (
                               <div
                                 key={file?.name}
