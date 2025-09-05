@@ -13,7 +13,9 @@
     "reset": "prisma migrate reset",
     "seed": "prisma db seed",
     "seed:list": "prisma db seed list",
-    "studio": "prisma studio"
+    "studio": "prisma studio",
+    "docker:up": "docker-compose up -d && sh ./scripts/setup-minio.sh",
+    "docker:down": "docker-compose down"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.879.0",
