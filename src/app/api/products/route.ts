@@ -2,9 +2,9 @@ import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma/client";
 import { DEFAULT_PAGINATION, UPLOAD_DIRECTORIES } from "@/constants";
-import { uploadFile } from "@/utils/uploadFile.util";
 import apiErrorHandler, { ApiError } from "@/utils/handlers/apiError.handler";
 import { getPaginatedProducts } from "@/lib/prisma/repositories/products.repository";
+import { uploadToS3 } from "@/lib/aws/s3Client";
 
 const { PAGE, PAGE_SIZE } = DEFAULT_PAGINATION;
 
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
     if (images) {
       const productPaths = [];
       for (const image of images) {
-        const path = await uploadFile(image, UPLOAD_DIRECTORIES.PRODUCTS);
+        const path = await uploadToS3(image, UPLOAD_DIRECTORIES.PRODUCTS);
         productPaths.push(path);
       }
       const productsImages = productPaths.map((path) => ({ path }));
