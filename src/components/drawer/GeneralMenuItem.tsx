@@ -39,7 +39,7 @@ export default function GeneralMenuItem({ item }: { item: MenuItem }) {
     <Collapsible defaultOpen key={item.title} className="group/collapsible">
       <SidebarMenuItem>
         <CollapsibleTrigger asChild>
-          <SidebarMenuButton>
+          <SidebarMenuButton className='cursor-pointer'>
             <item.icon />
             <span>{item?.title}</span>
             <ChevronDown className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-90" />

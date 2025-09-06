@@ -1,47 +1,66 @@
 'use client';
-import clsx from 'clsx';
-import { signOut } from 'next-auth/react';
 import {
   Users,
   Home,
   Settings,
   Package,
   CreditCard,
-  LogOut,
   ChartSpline,
+  Shield,
+  KeyRound,
+  UserCheck,
 } from 'lucide-react';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarFooter,
-} from '@/components/ui/shadcn/sidebar';
+import Drawer from '@/components/drawer/Drawer';
+import { ROUTES } from '@/constants';
+import { NavUser } from './NavUser';
 
-const items = [
+type MenuItem = {
+  title: string;
+  url: string;
+  icon: React.ComponentType<{ className?: string }>;
+  disabled?: boolean;
+  children?: MenuItem[];
+};
+
+const items: MenuItem[] = [
   {
     title: 'Home',
-    url: '/',
+    url: ROUTES.HOME,
     icon: Home,
   },
   {
     title: 'Dashboard',
-    url: '/admin',
+    url: ROUTES.ADMIN,
     icon: ChartSpline,
     disabled: true,
   },
   {
     title: 'Users',
-    url: '/admin/users',
+    url: ROUTES.ADMIN_USERS,
     icon: Users,
+    children: [
+      {
+        title: 'Roles',
+        url: '/admin/users/roles',
+        icon: Shield,
+        disabled: true,
+      },
+      {
+        title: 'Permissions',
+        url: '/admin/users/permissions',
+        icon: KeyRound,
+        disabled: true,
+      },
+      {
+        title: 'Active Users',
+        url: ROUTES.ADMIN_USERS,
+        icon: UserCheck,
+      },
+    ],
   },
   {
     title: 'Products',
-    url: '/admin/products',
+    url: ROUTES.ADMIN_PRODUCTS,
     icon: Package,
   },
   {
@@ -59,48 +78,5 @@ const items = [
 ];
 
 export default function AdminSidebar() {
-  return (
-    <Sidebar>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>SM Admin</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item?.title}>
-                  <SidebarMenuButton
-                    className={clsx({
-                      'opacity-50 cursor-not-allowed': item?.disabled,
-                    })}
-                    disabled={item?.disabled}
-                    asChild
-                  >
-                    <a href={item?.url}>
-                      <item.icon />
-                      <span>{item?.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      <SidebarFooter className="mt-auto">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton className="hover:bg-red-600" asChild>
-              <button
-                onClick={() => signOut({ callbackUrl: '/login' })}
-                className="w-full flex items-center gap-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors px-3 py-2"
-              >
-                <LogOut />
-                <span>Cerrar sesión</span>
-              </button>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-    </Sidebar>
-  );
+  return <Drawer title="SM - Admin" Footer={<NavUser />} items={items} />;
 }
