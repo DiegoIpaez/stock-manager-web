@@ -1,43 +1,24 @@
-import clsx from "clsx";
-import Link from "next/link";
-import { Metadata } from "next";
+import {
+  SidebarProvider,
+  SidebarTrigger,
+} from '@/components/ui/shadcn/sidebar';
+import AdminSidebar from './_components/AdminSidebar';
 
-export const metadata: Metadata = {
-  title: "Admin",
+type LayoutProps = {
+  children: React.ReactNode;
 };
 
-const ADMIN_MENU = [
-  {
-    id: 1,
-    name: "Users",
-    href: "/admin",
-  },
-  {
-    id: 2,
-    name: "Products",
-    href: "/admin/products",
-  },
-];
-
-export default async function AdminLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function Layout({ children }: LayoutProps) {
   return (
-    <div>
-      <div className="flex gap-2 mx-10 px-1 py-1 bg-white rounded my-5 shadow">
-        {ADMIN_MENU.map((item) => (
-          <Link
-            className={clsx("bg-primary p-1 flex-1 rounded text-center text-white")}
-            href={item.href}
-            key={item.id}
-          >
-            {item.name}
-          </Link>
-        ))}
+    <SidebarProvider>
+      <AdminSidebar />
+      <div className="flex flex-1 flex-col">
+        <header className="flex h-14 items-center border-b px-4 lg:px-6">
+          <SidebarTrigger />
+          <h2 className="ml-4 text-base font-medium">Admin Panel</h2>
+        </header>
+        <main className="flex-1 p-4">{children}</main>
       </div>
-      {children}
-    </div>
+    </SidebarProvider>
   );
 }
