@@ -1,9 +1,15 @@
 export const ROUTES = {
-  HOME: "/",
+  HOME: '/',
+  ADMIN: '/admin',
+  ADMIN_USERS: '/admin/users',
+  ADMIN_PRODUCTS: '/admin/products',
+  LOGIN: '/login',
+  PROFILE: '/profile',
 };
 
 export const API_ROUTES = {
-  USERS: "/users",
+  USERS: '/users',
+  PRODUCTS: '/products',
 };
 
 export const ALL_ROUTES = {

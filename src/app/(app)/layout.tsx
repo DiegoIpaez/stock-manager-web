@@ -1,7 +1,6 @@
-"use client";
-import { SessionProvider } from "next-auth/react";
-import Navbar from "@/components/navbar/Navbar";
-import { Toaster } from "@/components/ui/shadcn/sonner";
+'use client';
+import { SessionProvider } from 'next-auth/react';
+import { Toaster } from '@/components/ui/shadcn/sonner';
 
 export default function AppLayout({
   children,
@@ -10,8 +9,7 @@ export default function AppLayout({
 }>) {
   return (
     <SessionProvider>
-      <Navbar />
-      <main>{children}</main>
+      {children}
       <Toaster />
     </SessionProvider>
   );

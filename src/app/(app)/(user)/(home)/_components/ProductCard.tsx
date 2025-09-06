@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/shadcn/card";
 import { Badge } from "@/components/ui/shadcn/badge";
 import { Button } from "@/components/ui/shadcn/button";
-import ProductDefaultImage from "../../../../../public/static/images/default-product.png";
 
 type ProductCardProps = Product & {
   products_images: ProductImage[];
@@ -30,7 +29,7 @@ export default function ProductCard({
   const imageSrc =
     name && products_images?.[0]?.path
       ? products_images?.[0]?.path
-      : ProductDefaultImage;
+      : '/static/images/default-product.png';
 
   return (
     <Card className="w-full max-w-sm overflow-hidden">
