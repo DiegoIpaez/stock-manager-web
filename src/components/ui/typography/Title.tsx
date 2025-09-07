@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import clsx from 'clsx';
 
 export default function Title({
   children,
@@ -9,8 +9,8 @@ export default function Title({
 }) {
   return (
     <h1
-      className={clsx("text-4xl font-bold py-5", {
-        [className ?? ""]: className,
+      className={clsx('text-xl font-bold py-5', {
+        [className ?? '']: className,
       })}
     >
       {children}
