@@ -1,7 +1,6 @@
-import Link from "next/link";
-import Logout from "./Logout";
-import AdminLink from "./AdminLink";
-import ModeToggle from "./ModeToogle";
+import Link from 'next/link';
+import ModeToggle from './ModeToogle';
+import UserAvatarMenu from './UserAvatarMenu';
 
 export default function Navbar() {
   return (
@@ -11,15 +10,8 @@ export default function Navbar() {
           <div className="text-2xl font-bold">SM</div>
         </Link>
         <nav className="space-x-4 flex items-center">
-          <Link href="/" className="hover:underline p-1">
-            Home
-          </Link>
-          <Link href="/profile" className="hover:underline p-1">
-            Profile
-          </Link>
-          <AdminLink />
           <ModeToggle />
-          <Logout />
+          <UserAvatarMenu />
         </nav>
       </div>
     </header>
