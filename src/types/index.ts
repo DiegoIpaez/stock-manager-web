@@ -1,3 +1,4 @@
+export * from './user.type';
 export type NextParams = { params: Promise<{ id: string }> };
 
 export type MenuItem = {
