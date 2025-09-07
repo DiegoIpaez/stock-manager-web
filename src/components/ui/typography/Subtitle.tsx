@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import clsx from 'clsx';
 
 export default function Subtitle({
   children,
@@ -8,9 +8,7 @@ export default function Subtitle({
   className?: string;
 }) {
   return (
-    <h1
-      className={clsx("text-2xl font-bold", { [className ?? ""]: className })}
-    >
+    <h1 className={clsx('text-lg font-bold', { [className ?? '']: className })}>
       {children}
     </h1>
   );
