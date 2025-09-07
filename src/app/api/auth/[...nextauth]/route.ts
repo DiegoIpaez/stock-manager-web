@@ -1,20 +1,14 @@
-import bcrypt from "bcryptjs";
-import { Permission, Role, RolePermission } from "@prisma/client";
-import NextAuth, { AuthOptions, DefaultUser } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from 'bcryptjs';
+import NextAuth, { AuthOptions, DefaultUser, SessionOptions } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import {
   getUserByFilter,
   updateUserById,
-} from "@/lib/prisma/repositories/users.repository";
-import { CONFIG } from "@/constants";
+} from '@/lib/prisma/repositories/users.repository';
+import { CONFIG } from '@/constants';
+import { RoleUser, UserWithRole } from '@/types';
 
-declare module "next-auth" {
-  interface RoleWithPermission extends RolePermission {
-    permission?: Permission;
-  }
-  interface RoleUser extends Role {
-    roles_permissions?: RoleWithPermission[];
-  }
+declare module 'next-auth' {
   interface User extends DefaultUser {
     role?: RoleUser | null;
   }
@@ -25,19 +19,23 @@ declare module "next-auth" {
     email: string;
     role?: RoleUser | null;
   }
+
+  interface Session extends SessionOptions {
+    user: UserWithRole;
+  }
 }
 
 const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: 'Credentials',
       credentials: {
-        email: { label: "Email", type: "text", placeholder: "jsmith" },
-        password: { label: "Password", type: "password", placeholder: "*****" },
+        email: { label: 'Email', type: 'text', placeholder: 'jsmith' },
+        password: { label: 'Password', type: 'password', placeholder: '*****' },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials.password) {
-          throw new Error("Credenciales no proporcionadas");
+          throw new Error('Credenciales no proporcionadas');
         }
 
         const userFound = await getUserByFilter({
@@ -46,7 +44,7 @@ const authOptions: AuthOptions = {
           deleted: false,
         });
 
-        if (!userFound) throw new Error("Credenciales invalidas");
+        if (!userFound) throw new Error('Credenciales invalidas');
 
         await updateUserById(userFound?.id, { last_login: new Date() });
 
@@ -55,36 +53,30 @@ const authOptions: AuthOptions = {
           userFound?.password
         );
 
-        if (!matchPassword) throw new Error("Credenciales invalidas");
+        if (!matchPassword) throw new Error('Credenciales invalidas');
+        const { password, ...loggedUser } = userFound;
 
         return {
+          ...loggedUser,
           id: userFound?.id?.toString(),
-          name: userFound?.first_name + " " + userFound?.last_name,
-          email: userFound?.email,
-          role: userFound?.role,
         };
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) {
-        token.id = user?.id;
-        token.name = user?.name;
-        token.email = user?.email;
-        token.role = user?.role;
-      }
+      if (user) token = { ...token, ...user };
       return token;
     },
     async session({ session, token }) {
-      const user = { ...session?.user, role: token?.role };
+      const user = { ...session?.user, ...token };
       return { ...session, user };
     },
   },
   pages: {
-    signIn: "/",
-    error: "/login",
-    signOut: "/login",
+    signIn: '/',
+    error: '/login',
+    signOut: '/login',
   },
   secret: CONFIG.NEXTAUTH.SECRET,
 };
