@@ -1,9 +1,10 @@
-"use client";
+'use client';
 
-import clsx from "clsx";
-import { Fragment } from "react";
-import { Inbox, Loader } from "lucide-react";
-import Subtitle from "../typography/Subtitle";
+import clsx from 'clsx';
+import { Fragment } from 'react';
+import { Inbox } from 'lucide-react';
+import Subtitle from '../typography/Subtitle';
+import Spinner from '../feedback/Spinner';
 
 type ColumnProps<T> = {
   key: string;
@@ -25,14 +26,36 @@ type TableProps<T> = {
   className?: string;
 };
 
+function NotFoundDataTable({
+  columns,
+  noDataMessage,
+}: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  columns: ColumnProps<any>[];
+  noDataMessage?: string;
+}) {
+  return (
+    <tr>
+      <td colSpan={columns.length} className="text-center p-[5rem]">
+        <div className="flex flex-col justify-center items-center">
+          <Inbox size={40} className="text-[#2a2a2a]" />
+          <span className="mt-2 text-[13px] text-[#2a2a2a]">
+            {noDataMessage && noDataMessage}
+          </span>
+        </div>
+      </td>
+    </tr>
+  );
+}
+
 export default function Table<T>({
   columns = [],
   data = [],
-  title = "",
+  title = '',
   handleRowClick = () => {},
   selectedRow = null,
-  noDataMessage = "No hay datos para mostrar",
-  className = "",
+  noDataMessage = 'No data available',
+  className = '',
   loading = false,
 }: TableProps<T>) {
   return (
@@ -40,8 +63,8 @@ export default function Table<T>({
       {title && <Subtitle className="my-4 text-lg">{title}</Subtitle>}
       <div className="overflow-x-auto rounded-xl shadow">
         <table
-          className={clsx("min-w-full text-sm text-left bg-white", {
-            "min-h-[256px]": data?.length === 0 || loading,
+          className={clsx('min-w-full text-sm text-left bg-white', {
+            'min-h-[256px]': data?.length === 0 || loading,
             [className]: className,
           })}
         >
@@ -51,8 +74,8 @@ export default function Table<T>({
                 <th
                   key={column?.key}
                   className={clsx(
-                    "border-b-2 border-gray-200 bg-primary text-white font-semibold p-3 ",
-                    "first:rounded-tl-lg last:rounded-tr-lg",
+                    'border-b-2 border-gray-200 bg-[#2a2a2a] text-white font-semibold p-3 ',
+                    'first:rounded-tl-lg last:rounded-tr-lg',
                     column?.className && column?.className
                   )}
                 >
@@ -66,11 +89,7 @@ export default function Table<T>({
               <tr>
                 <td colSpan={columns.length}>
                   <div className="flex justify-center items-center">
-                    <Loader
-                      size={30}
-                      className="animate-spin"
-                      color="#2463EB"
-                    />
+                    <Spinner size={30} color="#000000ff" />
                   </div>
                 </td>
               </tr>
@@ -80,42 +99,36 @@ export default function Table<T>({
                   key={rowIndex}
                   onClick={() => handleRowClick(row)}
                   className={clsx(
-                    "hover:bg-primary-light transition-colors cursor-pointer",
-                    rowIndex % 2 === 0 ? "bg-gray-200" : "bg-gray-100",
+                    'hover:bg-[#BEDBFE] transition-colors cursor-pointer',
+                    rowIndex % 2 === 0 ? 'bg-gray-200' : 'bg-gray-100',
                     selectedRow === row
-                      ? "bg-blue-50 border-l-4 border-blue-400"
-                      : ""
+                      ? 'bg-blue-50 border-l-4 border-blue-400'
+                      : ''
                   )}
                 >
                   {columns?.map((column) => (
                     <td
                       key={column.key}
                       className={clsx(
-                        "border-b border-gray-200 p-3",
-                        "first:rounded-bl-lg last:rounded-br-lg text-black",
+                        'border-b border-gray-200 p-3',
+                        'first:rounded-bl-lg last:rounded-br-lg text-black',
                         column?.rowClassName && column?.rowClassName
                       )}
                     >
                       {column?.render
                         ? column?.render(row)
                         : row?.[column?.key as keyof T]
-                        ? row?.[column?.key as keyof T]
-                        : ""}
+                          ? row?.[column?.key as keyof T]
+                          : ''}
                     </td>
                   ))}
                 </tr>
               ))
             ) : (
-              <tr>
-                <td colSpan={columns.length} className="text-center p-[5rem]">
-                  <div className="flex flex-col justify-center items-center">
-                    <Inbox size={40} className="text-primary" />
-                    <span className="mt-2 text-[13px] text-primary">
-                      {noDataMessage && noDataMessage}
-                    </span>
-                  </div>
-                </td>
-              </tr>
+              <NotFoundDataTable
+                columns={columns}
+                noDataMessage={noDataMessage}
+              />
             )}
           </tbody>
         </table>
