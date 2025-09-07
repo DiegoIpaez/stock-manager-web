@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Popover, PopoverContent } from "./shadcn/popover";
-import { PopoverTrigger } from "@radix-ui/react-popover";
-import { Button } from "./shadcn/button";
-import { Loader } from "lucide-react";
+import React, { useState } from 'react';
+import { Popover, PopoverContent } from './shadcn/popover';
+import { PopoverArrow, PopoverTrigger } from '@radix-ui/react-popover';
+import { Button } from './shadcn/button';
+import Spinner from './feedback/Spinner';
 
 export default function Popconfirm({
   content,
@@ -26,18 +26,19 @@ export default function Popconfirm({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger>{trigger}</PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent className="text-sm">
+        <PopoverArrow />
         {content}
-        <div className="flex justify-end gap-2">
-          <Button onClick={() => onOk()}>
-            {loading && <Loader className="animate-spin" />}
-            Yes
+        <div className="flex justify-end gap-2 mt-4">
+          <Button className="cursor-pointer" onClick={() => handleOnCancel()}>
+            No
           </Button>
           <Button
-            className="bg-red-500 hover:bg-red-500-dark"
-            onClick={() => handleOnCancel()}
+            onClick={() => onOk()}
+            className="bg-red-500 hover:bg-red-500-dark text-white cursor-pointer"
           >
-            No
+            {loading && <Spinner />}
+            Yes
           </Button>
         </div>
       </PopoverContent>

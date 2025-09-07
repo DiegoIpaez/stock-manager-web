@@ -1,19 +1,19 @@
-"use client";
-import { z as zod } from "zod";
-import { useState } from "react";
-import { File, Loader2 } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/shadcn/input";
-import { Button } from "@/components/ui/shadcn/button";
-import { Textarea } from "@/components/ui/shadcn/textarea";
+'use client';
+import { z as zod } from 'zod';
+import { useState } from 'react';
+import { File } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Input } from '@/components/ui/shadcn/input';
+import { Button } from '@/components/ui/shadcn/button';
+import { Textarea } from '@/components/ui/shadcn/textarea';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/shadcn/dialog";
+} from '@/components/ui/shadcn/dialog';
 import {
   Form,
   FormControl,
@@ -21,27 +21,28 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/shadcn/form";
-import { createProduct } from "@/services/products.service";
-import clientErrorHandler from "@/utils/handlers/clientError.handler";
-import { showToastSuccess } from "@/utils/showToast.util";
+} from '@/components/ui/shadcn/form';
+import { createProduct } from '@/services/products.service';
+import clientErrorHandler from '@/utils/handlers/clientError.handler';
+import { showToastSuccess } from '@/utils/showToast.util';
+import Spinner from '@/components/ui/feedback/Spinner';
 
 const formSchema = zod.object({
   name: zod.string().min(2, {
-    message: "Name must be at least 2 characters.",
+    message: 'Name must be at least 2 characters.',
   }),
   description: zod.string(),
   price: zod
     .string()
-    .min(1, "Requerido")
+    .min(1, 'Requerido')
     .refine((val) => !isNaN(Number(val)), {
-      message: "Debe ser un número válido",
+      message: 'Debe ser un número válido',
     }),
   stock: zod
     .string()
-    .min(1, "Requerido")
+    .min(1, 'Requerido')
     .refine((val) => !isNaN(Number(val)), {
-      message: "Debe ser un número válido",
+      message: 'Debe ser un número válido',
     }),
   disabled: zod.boolean(),
   images: zod.any(),
@@ -62,10 +63,10 @@ export default function CreateProductModal({
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      price: "0",
-      stock: "0",
+      name: '',
+      description: '',
+      price: '0',
+      stock: '0',
       disabled: false,
     },
   });
@@ -75,7 +76,7 @@ export default function CreateProductModal({
     try {
       const processedValues = formSchema.parse(values);
       await createProduct(processedValues);
-      showToastSuccess("Product created successfully!");
+      showToastSuccess('Product created successfully!');
       setOpen(false);
       form.reset();
       await onRefresh();
@@ -193,7 +194,7 @@ export default function CreateProductModal({
                   type="submit"
                   className="bg-green-500 hover:bg-green-500 hover:opacity-90"
                 >
-                  {isSubmit && <Loader2 className="mr-2 animate-spin" />}
+                  {isSubmit && <Spinner className="mr-2" />}
                   Submit
                 </Button>
               </div>

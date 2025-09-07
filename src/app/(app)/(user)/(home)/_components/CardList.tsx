@@ -1,11 +1,11 @@
-"use client";
-import { Loader } from "lucide-react";
-import { Product } from "@prisma/client";
-import { useEffect, useState } from "react";
-import { getAllProductsByParams } from "@/services/products.service";
-import { PaginationResponse } from "@/utils/formatters/pagination.formatter";
-import Pagination from "@/components/ui/Pagination";
-import ProductCard from "./ProductCard";
+'use client';
+import { Product } from '@prisma/client';
+import { useEffect, useState } from 'react';
+import { getAllProductsByParams } from '@/services/products.service';
+import { PaginationResponse } from '@/utils/formatters/pagination.formatter';
+import Pagination from '@/components/ui/Pagination';
+import ProductCard from './ProductCard';
+import Spinner from '@/components/ui/feedback/Spinner';
 
 export default function CardList() {
   const [data, setData] = useState<Partial<PaginationResponse<Product>>>({});
@@ -20,7 +20,7 @@ export default function CardList() {
 
         setData(data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       } finally {
         setisLoading(false);
       }
@@ -34,7 +34,7 @@ export default function CardList() {
 
   return isLoading ? (
     <div className="flex justify-center mt-20">
-      <Loader size={50} className="animate-spin" />
+      <Spinner size={50} />
     </div>
   ) : (
     <div>
