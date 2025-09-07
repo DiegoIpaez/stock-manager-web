@@ -24,13 +24,12 @@ import {
   useSidebar,
 } from '@/components/ui/shadcn/sidebar';
 import { ROUTES } from '@/constants';
+import { formatInitials } from '@/utils/formatters/name.formatter';
 
 export function NavUser() {
   const router = useRouter();
   const { isMobile } = useSidebar();
   const { data: session } = useSession();
-
-  const avatar = 'https://avatars.githubusercontent.com/u/9919?s=200&v=4';
 
   return (
     <SidebarMenu>
@@ -42,14 +41,17 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg grayscale">
-                <AvatarImage src={avatar} alt={'admin-user-avatar'} />
+                <AvatarImage src="/images/user.jpg" alt={'admin-user-avatar'} />
                 <AvatarFallback className="rounded-lg">
-                  {session?.user?.name ? session?.user?.name.charAt(0) : 'AU'}
+                  {formatInitials({
+                    firstName: session?.user?.first_name,
+                    lastName: session?.user?.last_name,
+                  })}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">
-                  {session?.user?.name}
+                  {session?.user?.first_name} {session?.user?.last_name}
                 </span>
                 <span className="text-muted-foreground truncate text-xs">
                   {session?.user?.email}
@@ -67,14 +69,17 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={avatar} alt={'admin-user-avatar'} />
+                  <AvatarImage src="/images/user.jpg" alt={'admin-user-avatar'} />
                   <AvatarFallback className="rounded-lg">
-                    {session?.user?.name ? session?.user?.name.charAt(0) : 'AU'}
+                    {formatInitials({
+                      firstName: session?.user?.first_name,
+                      lastName: session?.user?.last_name,
+                    })}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">
-                    {session?.user?.name}
+                    {session?.user?.first_name} {session?.user?.last_name}
                   </span>
                   <span className="text-muted-foreground truncate text-xs">
                     {session?.user?.email}
@@ -89,12 +94,12 @@ export function NavUser() {
                 onClick={() => router.push(ROUTES.PROFILE)}
               >
                 <UserCircle />
-                Account
+                Profile
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              className="cursor-pointer"
+              className="cursor-pointer hover:bg-red-600/10 focus:bg-red-600/10"
               onClick={() => signOut({ callbackUrl: '/login' })}
             >
               <LogOut />
