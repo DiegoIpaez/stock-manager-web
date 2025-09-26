@@ -1,12 +1,12 @@
+import { SearchParamsPage } from '@/types';
 import Title from '@/components/ui/typography/Title';
 import Subtitle from '@/components/ui/typography/Subtitle';
 import FormLogin from './_components/FormLogin';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<any>;
+  searchParams: SearchParamsPage;
 }) {
   const { error } = (await searchParams) || {};
   return (
