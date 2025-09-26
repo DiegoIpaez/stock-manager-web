@@ -1,24 +1,19 @@
-"use client";
-import { signIn } from "next-auth/react";
-import { FormEvent, useState } from "react";
+'use client';
+import { signIn } from 'next-auth/react';
+import { FormEvent, useState } from 'react';
+import { Button } from '@/components/ui/shadcn/button';
 
 export default function FormLogin({ error }: { error?: string }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      await signIn("credentials", {
-        email,
-        password,
-        callbackUrl: "/",
-      });
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      alert("Error al iniciar sesión");
-    }
+  const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await signIn('credentials', {
+      email,
+      password,
+      callbackUrl: '/',
+    });
   };
 
   return (
@@ -28,7 +23,7 @@ export default function FormLogin({ error }: { error?: string }) {
         <input
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(event) => setEmail(event.target.value)}
           required
           className="text-black mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
         />
@@ -40,7 +35,7 @@ export default function FormLogin({ error }: { error?: string }) {
         <input
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(event) => setPassword(event.target.value)}
           required
           className="text-black mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
         />
@@ -50,12 +45,12 @@ export default function FormLogin({ error }: { error?: string }) {
           {error}
         </p>
       )}
-      <button
+      <Button
         type="submit"
-        className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        className="w-full cursor-pointer bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
       >
         Ingresar
-      </button>
+      </Button>
     </form>
   );
 }
